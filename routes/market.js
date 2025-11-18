@@ -14,8 +14,29 @@ router.get('/crypto', async (req, res) => {
         });
         cache.set('crypto', response.data);
         res.json(response.data);
-    } catch (err) { res.status(500).json({ error: err.message }); }
+    } catch (err) {
+        console.error("🔥 Crypto API ERROR:", err.response?.data || err.message);
+        res.status(500).json({ error: err.message });
+    }
 });
+
+
+// Meme Coins
+router.get('/meme-coins', async (req, res) => {
+    try {
+        if (cache.has('meme-coins')) return res.json(cache.get('meme-coins'));
+        // Може да използваш CoinGecko API за меме coins или mock данни
+        const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets', {
+            params: { vs_currency: 'usd', category: 'meme', order: 'market_cap_desc', per_page: 50, page: 1 }
+        });
+        cache.set('meme-coins', response.data);
+        res.json(response.data);
+    } catch (err) {
+        console.error("🔥 Meme Coins API ERROR:", err.response?.data || err.message);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 
 // Forex
 router.get('/forex', async (req, res) => {

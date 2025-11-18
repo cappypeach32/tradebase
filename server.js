@@ -33,3 +33,10 @@ app.get('/', (req, res) => res.send('TradeBase backend running'));
 // Start server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+
+// Global error handler
+app.use((err, req, res, next) => {
+    console.error("🔥 SERVER ERROR:", err);  // това ще се вижда в Render Logs
+    res.status(500).json({ error: err.message || "Server error" });
+  });
+  
